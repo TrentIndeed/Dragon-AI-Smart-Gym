@@ -1,0 +1,351 @@
+.app-shell {
+  width: min(1080px, 100%);
+  min-height: 100vh;
+  padding: 28px 32px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.app-header {
+  background: linear-gradient(135deg, rgba(59, 116, 255, 0.22), rgba(19, 53, 117, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+}
+
+.brand-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #9fc5ff;
+  letter-spacing: 1px;
+}
+
+.dragon {
+  font-size: 30px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-chip {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-weight: 600;
+  color: #cfe6ff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.status-chip.good {
+  background: rgba(60, 185, 90, 0.15);
+  border-color: rgba(60, 185, 90, 0.35);
+  color: #c4ffd5;
+}
+
+.status-chip.warn {
+  background: rgba(255, 185, 60, 0.14);
+  border-color: rgba(255, 185, 60, 0.35);
+  color: #fff0c4;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.card {
+  background: rgba(11, 22, 48, 0.82);
+  border-radius: 22px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+.card.highlight {
+  background: linear-gradient(145deg, rgba(16, 52, 108, 0.9), rgba(11, 25, 62, 0.9));
+  border-color: rgba(132, 186, 255, 0.25);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  margin: 2px 0;
+  font-size: 22px;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 11px;
+  color: #92b9ff;
+}
+
+.detail {
+  margin: 0;
+  color: #a6c5ff;
+}
+
+.resistance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.resistance-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.resistance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.resistance-value {
+  font-weight: 700;
+  color: #80d0ff;
+}
+
+.resistance-meta {
+  color: #cbdcff;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+input[type='range'] {
+  width: 100%;
+  accent-color: #5da8ff;
+  cursor: pointer;
+}
+
+.force-settings {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+select,
+button,
+input[type='range'] {
+  transition: 0.2s ease;
+}
+
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(9, 21, 46, 0.8);
+  color: #eaf2ff;
+}
+
+button.primary {
+  background: linear-gradient(120deg, #4ca0ff, #2f6bff);
+  border: none;
+  color: #0a1430;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button.ghost {
+  background: rgba(255, 255, 255, 0.05);
+  color: #d4e6ff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px 16px;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+button.ghost.active {
+  border-color: #4ca0ff;
+  color: #8fd0ff;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.slider-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #d9e6ff;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.length-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.length-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.length-slider {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.hint {
+  color: #a6c5ff;
+  margin: 6px 0 0;
+}
+
+.chart-shell {
+  background: radial-gradient(circle at 20% 30%, rgba(80, 150, 255, 0.12), rgba(12, 31, 61, 0.4)),
+    rgba(8, 18, 38, 0.8);
+  border-radius: 18px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.chart-line {
+  filter: drop-shadow(0 6px 16px rgba(76, 160, 255, 0.4));
+}
+
+.chart-fill {
+  opacity: 0.9;
+}
+
+.graph-meta,
+.length-meta,
+.status-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #cde2ff;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.selector {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 14px;
+}
+
+.exercise-card {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.exercise-card img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  background: #102042;
+}
+
+.dropdown select {
+  margin-top: 6px;
+}
+
+.log-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-header,
+.log-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.log-header {
+  font-weight: 700;
+  color: #96c6ff;
+  background: rgba(84, 148, 255, 0.12);
+}
+
+.log-row span {
+  color: #e6f1ff;
+}
+
+.chip {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #d3e3ff;
+}
+
+.chip.positive {
+  background: rgba(64, 199, 116, 0.18);
+  color: #d2ffe7;
+}
+
+@media (max-width: 900px) {
+  .selector {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-card {
+    grid-template-columns: 1fr;
+  }
+}
