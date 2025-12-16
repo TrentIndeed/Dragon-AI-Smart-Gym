@@ -1,0 +1,42 @@
+:root {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  line-height: 1.4;
+  font-weight: 400;
+  color: #e8f2ff;
+  background-color: #0c1f3d;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 20%, rgba(79, 129, 255, 0.18), transparent 30%),
+    radial-gradient(circle at 80% 0%, rgba(77, 217, 255, 0.12), transparent 35%),
+    linear-gradient(180deg, #0c1f3d 0%, #0b1630 100%);
+  display: flex;
+  justify-content: center;
+  color: #e8f2ff;
+}
+
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
