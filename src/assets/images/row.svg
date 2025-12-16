@@ -1,0 +1,8 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="32" fill="#0f2f8f"/>
+  <rect x="50" y="112" width="140" height="32" rx="16" fill="#8ad5ff"/>
+  <circle cx="60" cy="128" r="16" fill="#1e58ff"/>
+  <circle cx="180" cy="128" r="16" fill="#1e58ff"/>
+  <rect x="92" y="76" width="56" height="92" rx="24" fill="#163fbc"/>
+  <text x="120" y="36" text-anchor="middle" font-family="Inter, Arial" font-size="20" fill="#e7f4ff">Row</text>
+</svg>
