@@ -10,22 +10,26 @@ const exerciseOptions = [
   {
     value: 'lat-pulldown',
     label: 'Lat Pulldown',
-    image: 'https://dummyimage.com/320x200/0b3c5d/ffffff&text=Lat+Pulldown',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Lat_pulldown_machine.jpg/640px-Lat_pulldown_machine.jpg',
   },
   {
     value: 'row',
     label: 'Seated Row',
-    image: 'https://dummyimage.com/320x200/102a43/ffffff&text=Seated+Row',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Seated_cable_row_exercise.jpg/640px-Seated_cable_row_exercise.jpg',
   },
   {
     value: 'press',
     label: 'Chest Press',
-    image: 'https://dummyimage.com/320x200/113a5d/ffffff&text=Chest+Press',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Chest_press_machine.jpg/640px-Chest_press_machine.jpg',
   },
   {
     value: 'squat',
     label: 'Belt Squat',
-    image: 'https://dummyimage.com/320x200/0b2740/ffffff&text=Belt+Squat',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Reverse_belt_squat.jpg/640px-Reverse_belt_squat.jpg',
   },
 ];
 
@@ -331,7 +335,7 @@ function App() {
           </div>
         </section>
 
-        <section className="graphs">
+        <section className="graph-stack">
           <div className="graph-card">
             <div className="graph-header">
               <div>
@@ -365,7 +369,11 @@ function App() {
                 min="0"
                 max={LENGTH_MAX}
                 value={lengthTarget}
-                onChange={(e) => setLengthTarget(Number(e.target.value))}
+                onChange={(e) => {
+                  const next = Number(e.target.value);
+                  setLengthTarget(next);
+                  setCableLength(next);
+                }}
               />
             </div>
           </div>
@@ -457,55 +465,53 @@ function App() {
               </div>
               <p className="muted">Applies only on the way down while retracting.</p>
             </div>
-          </div>
-        </section>
 
-        <section className="sidebar">
-          <div className="card">
-            <div className="card-header">
-              <h4>Workout selector</h4>
-              <p className="status">Choose & preview</p>
-            </div>
-            <select
-              value={selectedExercise.value}
-              onChange={(e) => {
-                const chosen = exerciseOptions.find((ex) => ex.value === e.target.value);
-                setSelectedExercise(chosen);
-              }}
-            >
-              {exerciseOptions.map((exercise) => (
-                <option key={exercise.value} value={exercise.value}>
-                  {exercise.label}
-                </option>
-              ))}
-            </select>
-            <div className="exercise-preview">
-              <img src={selectedExercise.image} alt={selectedExercise.label} />
-              <p className="eyebrow">Form reference</p>
-              <p className="muted">Match the cable travel to the visual guide.</p>
-            </div>
-          </div>
-
-          <div className="card log">
-            <div className="card-header">
-              <h4>Workout log</h4>
-              <p className="status">After each set</p>
-            </div>
-            {workoutLog.length === 0 ? (
-              <p className="muted">Finish a set to see it logged.</p>
-            ) : (
-              <ul>
-                {workoutLog.map((entry) => (
-                  <li key={`${entry.exercise}-${entry.set}-${entry.reps}`}>
-                    <div>
-                      <p className="eyebrow">{entry.exercise}</p>
-                      <strong>Set {entry.set} · {entry.reps} reps</strong>
-                    </div>
-                    <span>{entry.weight} lb</span>
-                  </li>
+            <div className="card">
+              <div className="card-header">
+                <h4>Workout selector</h4>
+                <p className="status">Choose & preview</p>
+              </div>
+              <select
+                value={selectedExercise.value}
+                onChange={(e) => {
+                  const chosen = exerciseOptions.find((ex) => ex.value === e.target.value);
+                  setSelectedExercise(chosen);
+                }}
+              >
+                {exerciseOptions.map((exercise) => (
+                  <option key={exercise.value} value={exercise.value}>
+                    {exercise.label}
+                  </option>
                 ))}
-              </ul>
-            )}
+              </select>
+              <div className="exercise-preview">
+                <img src={selectedExercise.image} alt={selectedExercise.label} />
+                <p className="eyebrow">Form reference</p>
+                <p className="muted">Match the cable travel to the visual guide.</p>
+              </div>
+            </div>
+
+            <div className="card log">
+              <div className="card-header">
+                <h4>Workout log</h4>
+                <p className="status">After each set</p>
+              </div>
+              {workoutLog.length === 0 ? (
+                <p className="muted">Finish a set to see it logged.</p>
+              ) : (
+                <ul>
+                  {workoutLog.map((entry) => (
+                    <li key={`${entry.exercise}-${entry.set}-${entry.reps}`}>
+                      <div>
+                        <p className="eyebrow">{entry.exercise}</p>
+                        <strong>Set {entry.set} · {entry.reps} reps</strong>
+                      </div>
+                      <span>{entry.weight} lb</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </section>
       </main>
