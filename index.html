@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dragon AI Smart Gym</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="phone stars" id="app" role="application" aria-label="Dragon AI Smart Gym">
+      <div class="screen-stack">
+        <section class="screen active" data-screen="home" aria-label="Home">
+          <div class="screen-header">
+            <h1>Home</h1>
+            <p>Quick access to workouts, streaks, and recovery insights.</p>
+          </div>
+          <div class="screen-card">
+            <h2>Today&apos;s Focus</h2>
+            <p>Upper-body strength + mobility.</p>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="community" aria-label="Community">
+          <div class="screen-header">
+            <h1>Community</h1>
+            <p>Share goals, follow friends, and compare progress.</p>
+          </div>
+          <div class="screen-card">
+            <h2>Challenge Feed</h2>
+            <p>Join new challenges and see who is trending.</p>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="stats" aria-label="Stats">
+          <div class="screen-header">
+            <h1>Stats</h1>
+            <p>Track lifts, personal records, and progress snapshots.</p>
+          </div>
+          <div class="screen-card">
+            <h2>Monthly Summary</h2>
+            <p>Strength volume is up 12% from last month.</p>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="leagues" aria-label="Leagues">
+          <div class="content league-content">
+            <div class="header">
+              <div class="title">January League</div>
+              <svg class="trophy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M18 4h2a1 1 0 0 1 1 1v2a5 5 0 0 1-5 5h-.35A6.99 6.99 0 0 1 13 14.92V17h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-2.08A6.99 6.99 0 0 1 8.35 12H8a5 5 0 0 1-5-5V5a1 1 0 0 1 1-1h2V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1Z"
+                  fill="rgba(255,176,32,.95)"
+                />
+                <path
+                  d="M6 6H4v1a3 3 0 0 0 3 3h.03A7 7 0 0 1 6 6Zm14 0h-2a7 7 0 0 1-1.03 4H17a3 3 0 0 0 3-3V6Z"
+                  fill="rgba(255,206,92,.95)"
+                />
+                <path
+                  d="M9 21a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1Z"
+                  fill="rgba(255,176,32,.7)"
+                />
+              </svg>
+            </div>
+
+            <div class="seg" role="tablist" aria-label="League scope">
+              <button class="active" id="tabFriends" role="tab" aria-selected="true">Friends Only</button>
+              <button id="tabGlobal" role="tab" aria-selected="false">Global</button>
+            </div>
+
+            <div class="board" id="board" aria-label="Leaderboard"></div>
+
+            <div class="timeline" aria-label="Month timeline">
+              <div class="dot" aria-hidden="true"></div>
+              <div>2in</div>
+              <div>3w</div>
+              <div>5w</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <nav class="nav" aria-label="Bottom navigation">
+        <button class="active" data-nav="home" aria-label="Home">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M3 10.2 12 3l9 7.2V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.8Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <button data-nav="community" aria-label="Community">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="currentColor" stroke-width="2" />
+            <path d="M4 21a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <button data-nav="stats" aria-label="Stats">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 19V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M8 16v-5M12 16V8M16 16v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <button data-nav="leagues" aria-label="Leagues">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M19.4 15a8.1 8.1 0 0 0 .1-2l2-1.2-2-3.4-2.3.6a7.7 7.7 0 0 0-1.7-1L13.8 3h-3.6L9.5 6.9a7.7 7.7 0 0 0-1.7 1L5.5 7.3l-2 3.4 2 1.2a8.1 8.1 0 0 0 .1 2l-2 1.2 2 3.4 2.3-.6a7.7 7.7 0 0 0 1.7 1L10.2 21h3.6l.7-3.9a7.7 7.7 0 0 0 1.7-1l2.3.6 2-3.4-2-1.2Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </nav>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
