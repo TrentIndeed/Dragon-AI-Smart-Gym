@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Cable Length Graph</title>
+  <style>
+    :root{
+      --bg0:#020409;           /* near-black */
+      --bg1:#071225;           /* deep navy */
+      --bg2:#0b1b33;           /* vignette blue */
+      --grid:rgba(190,220,255,.10);
+      --gridBold:rgba(190,220,255,.16);
+      --text:rgba(220,238,255,.70);
+      --textDim:rgba(220,238,255,.45);
+      --panel:rgba(24,26,30,.88);   /* charcoal */
+      --panelBorder:rgba(255,255,255,.06);
+      --blue:#2db2ff;
+      --green:#45ff7a;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:
+        /* layered radial vignette (dark blue -> black) */
+        radial-gradient(1200px 900px at 50% 35%, rgba(30,70,140,.35), transparent 60%),
+        radial-gradient(900px 700px at 70% 55%, rgba(15,40,90,.35), transparent 65%),
+        radial-gradient(1400px 1100px at 50% 50%, rgba(0,0,0,.55), rgba(0,0,0,.85) 70%),
+        linear-gradient(180deg, var(--bg2), var(--bg0));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:#fff;
+      display:grid;
+      place-items:center;
+    }
+
+    /* 9:16 app screen */
+    .screen{
+      width:min(420px, 96vw);
+      aspect-ratio:9/16;
+      position:relative;
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow:0 40px 90px rgba(0,0,0,.6);
+    }
+
+    /* Graph card: only 1/5th of screen height, not full-width */
+    .card{
+      position:absolute;
+      top:10%;
+      left:10%;
+      right:10%;
+      height:40%; /* 2x taller card (was 20%, now 40% of screen) */
+      border-radius:22px;
+      overflow:hidden;
+      background:
+        radial-gradient(700px 500px at 50% 25%, rgba(60,110,190,.12), transparent 55%),
+        radial-gradient(900px 700px at 50% 70%, rgba(0,0,0,.55), rgba(0,0,0,.85) 65%),
+        linear-gradient(180deg, #1a1c20, #0f1114);
+      box-shadow:
+        0 20px 40px rgba(0,0,0,.65),
+        0 0 0 1px rgba(255,255,255,.06) inset;
+    }
+
+    /* Vertical fade masks (cinematic) */
+    .topFade{
+      position:absolute;
+      inset:0 0 auto 0;
+      height:22%;
+      background:linear-gradient(180deg, rgba(0,0,0,.40), transparent);
+      pointer-events:none;
+      z-index:3;
+    }
+    .bottomFade{
+      position:absolute;
+      inset:auto 0 0 0;
+      height:20%;
+      background:linear-gradient(0deg, rgba(0,0,0,.55), transparent);
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .graphWrap{
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:50%; /* graph is 50% shorter (uses top half of card) */
+      padding:12px 12px;
+      z-index:2;
+    }
+
+    canvas{
+      width:100%;
+      height:100%;
+      display:block;
+      border-radius:16px;
+    }
+
+    /* Controls panel lives on the screen, not inside the graph card */
+    .controls{
+      position:absolute;
+      left:6%;
+      right:6%;
+      bottom:6%;
+      padding:12px 12px 10px;
+      border-radius:16px;
+      background:var(--panel);
+      border:1px solid var(--panelBorder);
+      backdrop-filter: blur(10px);
+      z-index:5;
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.35),
+        0 0 0 1px rgba(255,255,255,.03) inset;
+    }
+
+    .row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .row:last-child{ margin-bottom:0; }
+
+    .label{
+      width:104px;
+      font-size:12px;
+      letter-spacing:.2px;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      box-shadow:0 0 16px currentColor;
+      flex:0 0 auto;
+    }
+    .label .val{
+      margin-left:auto;
+      font-variant-numeric: tabular-nums;
+      color:rgba(255,255,255,.78);
+    }
+
+    input[type="range"]{
+      -webkit-appearance:none;
+      appearance:none;
+      width:100%;
+      height:18px;
+      background:transparent;
+      margin:0;
+    }
+    input[type="range"]::-webkit-slider-runnable-track{
+      height:6px;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(120,160,220,.18), rgba(120,160,220,.08));
+      box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset;
+    }
+    input[type="range"]::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      appearance:none;
+      width:18px;height:18px;
+      border-radius:999px;
+      margin-top:-6px;
+      background:rgba(255,255,255,.88);
+      box-shadow:
+        0 8px 18px rgba(0,0,0,.35),
+        0 0 0 2px rgba(0,0,0,.25) inset;
+      cursor:pointer;
+    }
+    input[type="range"]:focus{ outline:none; }
+
+    .hint{
+      margin-top:8px;
+      font-size:11px;
+      color:var(--textDim);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      user-select:none;
+    }
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Optional: small debug banner for runtime checks */
+    .debug{
+      position:absolute;
+      top:2.5%;
+      left:6%;
+      right:6%;
+      padding:8px 10px;
+      border-radius:12px;
+      background:rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.06);
+      color:rgba(255,255,255,.8);
+      font-size:11px;
+      display:none;
+      z-index:6;
+    }
+    .debug.show{ display:block; }
+  </style>
+</head>
+<body>
+  <div class="screen" id="screen">
+    <div class="debug" id="debug"></div>
+
+    <div class="card">
+      <div class="topFade"></div>
+      <div class="bottomFade"></div>
+
+      <div class="graphWrap">
+        <!-- FIX: canvas exists so script can getContext() -->
+        <canvas id="chart"></canvas>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="row">
+        <div class="label">
+          <span class="dot" style="color:var(--blue); background:var(--blue)"></span>
+          <span>Left cable</span>
+          <span class="val" id="leftVal">0.0 in</span>
+        </div>
+        <input id="left" type="range" min="0" max="36" step="0.1" value="6" />
+      </div>
+
+      <div class="row">
+        <div class="label">
+          <span class="dot" style="color:var(--green); background:var(--green)"></span>
+          <span>Right cable</span>
+          <span class="val" id="rightVal">0.0 in</span>
+        </div>
+        <input id="right" type="range" min="0" max="36" step="0.1" value="6" />
+      </div>
+
+      <div class="hint">
+        <div class="pill">Auto-zoom: <span id="zoomText">—</span></div>
+        <div class="pill">Reps: <span id="repText">0</span></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // ------------------------------
+  // Runtime checks (acts like tests for this standalone HTML)
+  // ------------------------------
+  const debug = document.getElementById('debug');
+  function assert(cond, msg){
+    if(!cond){
+      debug.classList.add('show');
+      debug.textContent = 'ERROR: ' + msg;
+      throw new Error(msg);
+    }
+  }
+
+  const canvas = document.getElementById('chart');
+  assert(!!canvas, 'Missing <canvas id="chart"> element.');
+  const ctx = canvas.getContext('2d');
+  assert(!!ctx, 'Canvas 2D context unavailable.');
+
+  const elLeft = document.getElementById('left');
+  const elRight = document.getElementById('right');
+  const leftVal = document.getElementById('leftVal');
+  const rightVal = document.getElementById('rightVal');
+  const zoomText = document.getElementById('zoomText');
+  const repText = document.getElementById('repText');
+
+  assert(!!elLeft && !!elRight, 'Slider(s) missing.');
+  assert(!!leftVal && !!rightVal, 'Value label(s) missing.');
+
+  const BLUE  = '#2db2ff';
+  const GREEN = '#45ff7a';
+
+  // Display only last 10 seconds; lines pass through (no squishing)
+  const HISTORY_SEC = 10;
+  const FPS = 60;
+  const MAX_POINTS = (HISTORY_SEC + 2) * FPS;
+
+  const seriesA = [];
+  const seriesB = [];
+  const timeStamps = [];
+
+  let leftNow = Number(elLeft.value);
+  let rightNow = Number(elRight.value);
+  let leftTarget = leftNow;
+  let rightTarget = rightNow;
+
+  const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+  const lerp = (a,b,t)=>a+(b-a)*t;
+
+  let t0 = performance.now();
+  let lastT = 0;
+
+  // Manual-only control: cable length is driven ONLY by sliders (no auto motion)
+  // (rep simulation removed)
+
+
+  // Rep tracking disabled in manual mode
+  let repCount = 0;
+  repText.textContent = '—';
+
+  // Max cable length is 36"; y scale uses the same cap.
+  let yMaxSoft = 36;
+  const TICK_SET = [0, 6, 12, 24, 36];
+
+  function resize(){
+    const dpr = Math.min(2.5, window.devicePixelRatio || 1);
+    const r = canvas.getBoundingClientRect();
+    canvas.width = Math.max(2, Math.round(r.width * dpr));
+    canvas.height = Math.max(2, Math.round(r.height * dpr));
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function yToPx(y, y0, h){
+    // LINEAR mapping: 0..yMaxSoft maps evenly top-to-bottom
+    const clamped = Math.max(0, Math.min(yMaxSoft, y));
+    const n = clamped / Math.max(0.0001, yMaxSoft); // 0..1
+    return y0 + h * (1 - n);
+  }
+
+  function detectRep(t){
+    // Rep detection disabled when using manual-only slider control
+    // (kept as stub so future sensor input can re-enable it)
+  }
+
+  function autoZoom(){
+    // Auto-zoom now simply locks to full 0–36 in range for manual mode
+    yMaxSoft = 36;
+    zoomText.textContent = '36.0 in';
+  }
+
+  function draw(){
+    resize();
+
+    const w = canvas.width / (window.devicePixelRatio || 1);
+    const h = canvas.height / (window.devicePixelRatio || 1);
+    ctx.clearRect(0,0,w,h);
+
+    const padL=30, padR=14, padT=16, padB=22;
+    const px=padL, py=padT, pw=w-padL-padR, ph=h-padT-padB;
+
+    const windowEnd = lastT;
+    const windowStart = windowEnd - HISTORY_SEC;
+
+    // grid lines (5 evenly spaced on both axes)
+    ctx.font='10px system-ui';
+    ctx.fillStyle='rgba(220,238,255,.55)';
+    ctx.textAlign='right';
+    ctx.textBaseline='middle';
+
+    const GRID_COUNT_Y = 5; // revert Y-axis to original 5 lines
+    const GRID_COUNT_X = 7; // add 2 more X-axis lines
+
+    // Horizontal grid lines (Y axis)
+    for(let i=0;i<GRID_COUNT_Y;i++){
+      const n = i / (GRID_COUNT_Y - 1); // 0..1
+      const v = yMaxSoft * n;
+      const y = py + ph * (1 - n);
+
+      ctx.strokeStyle = (i === 0 || i === GRID_COUNT_Y-1)
+        ? 'rgba(190,220,255,.16)'
+        : 'rgba(190,220,255,.10)';
+
+      ctx.beginPath();
+      ctx.moveTo(px, y);
+      ctx.lineTo(px + pw, y);
+      ctx.stroke();
+
+      ctx.fillText(v.toFixed(0) + ' in', px - 6, y);
+    }
+
+    // Vertical grid lines (X axis)
+    for(let i=0;i<GRID_COUNT_X;i++){
+      const n = i / (GRID_COUNT_X - 1); // 0..1
+      const x = px + pw * n;
+
+      ctx.strokeStyle = (i === 0 || i === GRID_COUNT_X-1)
+        ? 'rgba(190,220,255,.16)'
+        : 'rgba(190,220,255,.10)';
+
+      ctx.beginPath();
+      ctx.moveTo(x, py);
+      ctx.lineTo(x, py + ph);
+      ctx.stroke();
+    }
+
+    function xFromTime(t){
+      const u = (t - windowStart) / HISTORY_SEC; // 0..1 across 10s
+      return px + pw * u;
+    }
+
+    function plot(series, color){
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 4; // 2x thicker line
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+
+      let started = false;
+      ctx.beginPath();
+
+      for(let i=0;i<series.length;i++){
+        const tt = timeStamps[i];
+        if(tt < windowStart) continue; // off-screen left
+        if(tt > windowEnd) break;
+
+        const x = xFromTime(tt);
+        const y = yToPx(series[i], py, ph);
+
+        if(!started){ ctx.moveTo(x,y); started = true; }
+        else ctx.lineTo(x,y);
+      }
+
+      if(started) ctx.stroke();
+
+      // Draw glowing lead dot at the newest visible point
+      for(let i=series.length-1;i>=0;i--){
+        const tt = timeStamps[i];
+        if(tt < windowStart || tt > windowEnd) continue;
+        const x = xFromTime(tt);
+        const y = yToPx(series[i], py, ph);
+
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        break;
+      }
+      ctx.restore();
+    }
+
+    plot(seriesA, BLUE);
+    plot(seriesB, GREEN);
+  }
+
+  function tick(now){
+    const t = (now - t0) / 1000;
+    lastT = t;
+
+    leftNow = leftTarget;
+    rightNow = rightTarget;
+
+    // No automatic movement – values come directly from user sliders
+
+    const l = clamp(leftNow, 0, 36);
+    const r = clamp(rightNow, 0, 36);
+
+    leftVal.textContent = l.toFixed(1) + ' in';
+    rightVal.textContent = r.toFixed(1) + ' in';
+
+    timeStamps.push(t);
+    seriesA.push(l);
+    seriesB.push(r);
+
+    // keep only last 10 seconds of samples so the tail passes out naturally
+    const cutoff = t - HISTORY_SEC;
+    while(timeStamps.length && timeStamps[0] < cutoff){
+      timeStamps.shift();
+      seriesA.shift();
+      seriesB.shift();
+    }
+
+    // safety cap
+    while(seriesA.length > MAX_POINTS){
+      timeStamps.shift();
+      seriesA.shift();
+      seriesB.shift();
+    }
+
+    detectRep(t);
+    autoZoom();
+    draw();
+
+    requestAnimationFrame(tick);
+  }
+
+  elLeft.addEventListener('input', () => leftTarget = Number(elLeft.value));
+  elRight.addEventListener('input', () => rightTarget = Number(elRight.value));
+
+  // mini “test cases” for slider constraints
+  assert(Number(elLeft.max) === 36 && Number(elRight.max) === 36, 'Expected sliders to max at 36 inches.');
+  assert(Number(elLeft.min) === 0 && Number(elRight.min) === 0, 'Expected sliders to min at 0 inches.');
+
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
