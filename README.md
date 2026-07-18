@@ -1,5 +1,8 @@
 # Dragon AI Smart Gym
 
+![Dragon AI Smart Gym control app](docs/screenshot.png)
+*The touchscreen control app - resistance dial, live per-rep force curve, and left/right motor sync.*
+
 A digital resistance cable machine — a motorized strength-training system with
 electronically controlled resistance, driven from a touchscreen app. Set your
 target weight in software, get smooth motorized resistance, and track every rep.
